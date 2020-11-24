@@ -19,6 +19,7 @@ public class TicketSeat {
     @JoinColumn(name = "moviegoer_id")
     private MovieGoer owner;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "screening_id")
     private Screening screening;
