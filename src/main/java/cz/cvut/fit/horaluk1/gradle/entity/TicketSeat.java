@@ -27,10 +27,11 @@ public class TicketSeat {
     public TicketSeat() {
     }
 
-    public TicketSeat(boolean taken, MovieGoer owner, Screening screening) {
+    public TicketSeat(int number, boolean taken, MovieGoer owner, Screening screening) {
+        this.number = number;
         this.taken = taken;
         this.owner = owner;
-        this.screening= screening;
+        this.screening = screening;
     }
 
     public long getId() {
@@ -53,11 +54,11 @@ public class TicketSeat {
         this.taken = taken;
     }
 
-    public MovieGoer getOwnerId() {
+    public MovieGoer getOwner() {
         return owner;
     }
 
-    public void setOwnerId(MovieGoer owner) {
+    public void setOwner(MovieGoer owner) {
         this.owner = owner;
     }
 

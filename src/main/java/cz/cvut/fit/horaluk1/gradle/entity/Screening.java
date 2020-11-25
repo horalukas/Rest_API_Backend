@@ -14,7 +14,7 @@ public class Screening {
     private Date time;
 
     @NotNull
-    private boolean is3D;
+    private boolean _3D;
 
     @ManyToOne
     @NotNull
@@ -29,7 +29,7 @@ public class Screening {
 
     public Screening(Date time, boolean is3D, Auditorium auditorium, Movie movie) {
         this.time = time;
-        this.is3D = is3D;
+        this._3D = is3D;
         this.auditorium = auditorium;
         this.movie = movie;
     }
@@ -46,12 +46,12 @@ public class Screening {
         this.time = time;
     }
 
-    public boolean isIs3D() {
-        return is3D;
+    public boolean is_3D() {
+        return _3D;
     }
 
-    public void setIs3D(boolean is3D) {
-        this.is3D = is3D;
+    public void set_3D(boolean is3D) {
+        this._3D = is3D;
     }
 
     public Auditorium getAuditorium() { return auditorium; }

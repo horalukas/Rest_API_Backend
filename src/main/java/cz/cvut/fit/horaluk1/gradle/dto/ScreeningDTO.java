@@ -10,14 +10,14 @@ public class ScreeningDTO {
 
     private final int id;
     private final Date time;
-    private final boolean is3D;
+    private final boolean _3D;
     private final Integer auditoriumId;
     private final Integer movieId;
 
     public ScreeningDTO(int id, Date time, boolean is3D, Integer auditoriumId, Integer movieId) {
         this.id = id;
         this.time = time;
-        this.is3D = is3D;
+        this._3D = is3D;
         this.auditoriumId = auditoriumId;
         this.movieId = movieId;
     }
@@ -30,8 +30,8 @@ public class ScreeningDTO {
         return time;
     }
 
-    public boolean isIs3D() {
-        return is3D;
+    public boolean is_3D() {
+        return _3D;
     }
 
     public Integer getAuditorium() { return auditoriumId; }

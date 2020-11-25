@@ -15,7 +15,7 @@ public class MovieStar {
     private String firstName;
 
     @NotNull
-    private String secondName;
+    private String lastName;
 
     @ManyToMany
     @JoinTable(
@@ -27,9 +27,9 @@ public class MovieStar {
     public MovieStar() {
     }
 
-    public MovieStar(String firstName, String secondName, List<Movie> movies) {
+    public MovieStar(String firstName, String lastName, List<Movie> movies) {
         this.firstName = firstName;
-        this.secondName = secondName;
+        this.lastName = lastName;
         this.movies=movies;
     }
 
@@ -45,12 +45,12 @@ public class MovieStar {
         this.firstName = firstName;
     }
 
-    public String getSecondName() {
-        return secondName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
+    public void setLastName(String secondName) {
+        this.lastName = secondName;
     }
 
     public List<Movie> getMovies() { return movies; }

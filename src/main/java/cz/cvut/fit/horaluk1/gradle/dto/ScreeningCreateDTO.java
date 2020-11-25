@@ -6,7 +6,7 @@ import java.util.Date;
 public class ScreeningCreateDTO {
 
     private Date time;
-    private boolean is3D;
+    private boolean _3D;
     private Integer auditoriumId;
     private Integer movieId;
 
@@ -15,7 +15,7 @@ public class ScreeningCreateDTO {
 
     public ScreeningCreateDTO(Date time, boolean is3D, Integer auditoriumId, Integer movieId) {
         this.time = time;
-        this.is3D = is3D;
+        this._3D = is3D;
         this.auditoriumId = auditoriumId;
         this.movieId = movieId;
     }
@@ -24,9 +24,7 @@ public class ScreeningCreateDTO {
         return time;
     }
 
-    public boolean isIs3D() {
-        return is3D;
-    }
+    public boolean is_3D() { return _3D; }
 
     public Integer getAuditoriumId() { return auditoriumId; }
 
@@ -36,9 +34,7 @@ public class ScreeningCreateDTO {
         this.time = time;
     }
 
-    public void setIs3D(boolean is3D) {
-        this.is3D = is3D;
-    }
+    public void set_3D(boolean is3D) { this._3D = is3D; }
 
     public void setAuditoriumId(Integer auditoriumId) {
         this.auditoriumId = auditoriumId;
