@@ -9,4 +9,6 @@ public interface MovieGoerRepository  extends JpaRepository<MovieGoer, Integer> 
 
     Optional<MovieGoer> findByEmail(String email);
 
+    void deleteByEmail(String email);
+
 }

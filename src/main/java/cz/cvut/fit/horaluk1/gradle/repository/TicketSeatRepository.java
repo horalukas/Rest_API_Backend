@@ -10,4 +10,6 @@ import java.util.List;
 public interface TicketSeatRepository  extends JpaRepository<TicketSeat, Long> {
 
     List<TicketSeat> findAllByOwnerEmail(String email);
+
+    List<TicketSeat> findAllByScreeningId(int id);
 }

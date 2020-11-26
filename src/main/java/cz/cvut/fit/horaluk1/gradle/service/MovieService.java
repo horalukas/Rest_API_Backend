@@ -4,7 +4,10 @@ import cz.cvut.fit.horaluk1.gradle.dto.MovieCreateDTO;
 import cz.cvut.fit.horaluk1.gradle.dto.MovieDTO;
 import cz.cvut.fit.horaluk1.gradle.entity.Movie;
 import cz.cvut.fit.horaluk1.gradle.entity.MovieStar;
+import cz.cvut.fit.horaluk1.gradle.exception.ExistingEntityException;
+import cz.cvut.fit.horaluk1.gradle.exception.NotFoundException;
 import cz.cvut.fit.horaluk1.gradle.repository.MovieRepository;
+import cz.cvut.fit.horaluk1.gradle.repository.MovieStarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +20,16 @@ import java.util.stream.Collectors;
 public class MovieService {
 
     private final MovieRepository movieRepository;
-    private final MovieStarService movieStarService;
+    private final MovieStarRepository movieStarRepository;
 
     @Autowired
-    public MovieService(MovieRepository movieRepository, MovieStarService movieStarService) {
+    public MovieService(MovieRepository movieRepository, MovieStarRepository movieStarRepository) {
         this.movieRepository = movieRepository;
-        this.movieStarService = movieStarService;
+        this.movieStarRepository = movieStarRepository;
     }
 
     public List<MovieDTO> findAll(){
         return movieRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
-    }
-
-    public List<Movie> findByIds(List<Integer> ids){
-        return movieRepository.findAllById(ids);
     }
 
     public Optional<Movie> findById(int id){
@@ -55,9 +54,12 @@ public class MovieService {
 
     @Transactional
     public MovieDTO create(MovieCreateDTO movieCreateDTO) throws Exception{
-        List<MovieStar> stars = movieStarService.findByIds(movieCreateDTO.getStarIds());
+        Optional<Movie> optionalMovie = movieRepository.findByName(movieCreateDTO.getName());
+        if(!optionalMovie.isEmpty())
+            throw new ExistingEntityException();
+        List<MovieStar> stars = movieStarRepository.findAllById(movieCreateDTO.getStarIds());
         if(stars.size() != movieCreateDTO.getStarIds().size())
-            throw new Exception("some stars not found"); // placeholder
+            throw new IllegalArgumentException("Some stars not found");
         return toDTO(
                 movieRepository.save(
                         new Movie(movieCreateDTO.getName(),
@@ -73,11 +75,11 @@ public class MovieService {
     public MovieDTO update(int id, MovieCreateDTO movieCreateDTO) throws Exception{
         Optional<Movie> optionalMovie = findById(id);
         if(optionalMovie.isEmpty())
-            throw new Exception("Movie doesnt exist");//placeholder
+            throw new NotFoundException();
         Movie movie = optionalMovie.get();
-        List<MovieStar> stars = movieStarService.findByIds(movieCreateDTO.getStarIds());
+        List<MovieStar> stars = movieStarRepository.findAllById(movieCreateDTO.getStarIds());
         if(stars.size() != movieCreateDTO.getStarIds().size())
-            throw new Exception("some stars not found"); // placeholder
+            throw new IllegalArgumentException("some stars not found");
         movie.setName(movieCreateDTO.getName());
         movie.setDirector(movieCreateDTO.getDirector());
         movie.setMinutes(movieCreateDTO.getMinutes());

@@ -3,6 +3,7 @@ package cz.cvut.fit.horaluk1.gradle.service;
 import cz.cvut.fit.horaluk1.gradle.dto.AuditoriumCreateDTO;
 import cz.cvut.fit.horaluk1.gradle.dto.AuditoriumDTO;
 import cz.cvut.fit.horaluk1.gradle.entity.Auditorium;
+import cz.cvut.fit.horaluk1.gradle.exception.NotFoundException;
 import cz.cvut.fit.horaluk1.gradle.repository.AuditoriumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,6 @@ public class AuditoriumService {
         return auditoriumRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<Auditorium> findByIds(List<Integer> ids){
-        return auditoriumRepository.findAllById(ids);
-    }
-
     public Optional<Auditorium> findById(int id){
         return auditoriumRepository.findById(id);
     }
@@ -46,7 +43,7 @@ public class AuditoriumService {
     public AuditoriumDTO update(int id, AuditoriumCreateDTO auditoriumCreateDTO) throws Exception{
         Optional<Auditorium> optionalAuditorium = auditoriumRepository.findById(id);
         if(optionalAuditorium.isEmpty())
-            throw new Exception("Auditorium doesnt exist"); //placeholder exception
+            throw new NotFoundException();
         Auditorium auditorium = optionalAuditorium.get();
         auditorium.setCapacity(auditoriumCreateDTO.getCapacity());
         return toDTO(auditorium);

@@ -5,6 +5,7 @@ import cz.cvut.fit.horaluk1.gradle.entity.Auditorium;
 import cz.cvut.fit.horaluk1.gradle.entity.Movie;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class ScreeningDTO {
 
@@ -34,8 +35,24 @@ public class ScreeningDTO {
         return _3D;
     }
 
-    public Integer getAuditorium() { return auditoriumId; }
+    public Integer getAuditoriumId() { return auditoriumId; }
 
-    public Integer getMovie() { return movieId; }
+    public Integer getMovieId() { return movieId; }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ScreeningDTO)) return false;
+        ScreeningDTO dto = (ScreeningDTO) o;
+        return id == dto.id &&
+                _3D == dto._3D &&
+                time.equals(dto.time) &&
+                auditoriumId.equals(dto.auditoriumId) &&
+                movieId.equals(dto.movieId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, time, _3D, auditoriumId, movieId);
+    }
 }

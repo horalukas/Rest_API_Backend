@@ -6,6 +6,9 @@ import cz.cvut.fit.horaluk1.gradle.entity.Auditorium;
 import cz.cvut.fit.horaluk1.gradle.entity.MovieGoer;
 import cz.cvut.fit.horaluk1.gradle.entity.Screening;
 import cz.cvut.fit.horaluk1.gradle.entity.TicketSeat;
+import cz.cvut.fit.horaluk1.gradle.exception.NotFoundException;
+import cz.cvut.fit.horaluk1.gradle.repository.MovieGoerRepository;
+import cz.cvut.fit.horaluk1.gradle.repository.ScreeningRepository;
 import cz.cvut.fit.horaluk1.gradle.repository.TicketSeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,22 +22,18 @@ import java.util.stream.Collectors;
 public class TicketSeatService {
 
     private final TicketSeatRepository ticketSeatRepository;
-    private final MovieGoerService movieGoerService;
-    private final ScreeningService screeningService;
+    private final MovieGoerRepository movieGoerRepository;
+    private final ScreeningRepository screeningRepository;
 
     @Autowired
-    public TicketSeatService(TicketSeatRepository ticketSeatRepository, MovieGoerService movieGoerService, ScreeningService screeningService) {
+    public TicketSeatService(TicketSeatRepository ticketSeatRepository, MovieGoerRepository movieGoerRepository, ScreeningRepository screeningRepository) {
         this.ticketSeatRepository = ticketSeatRepository;
-        this.movieGoerService = movieGoerService;
-        this.screeningService = screeningService;
+        this.movieGoerRepository = movieGoerRepository;
+        this.screeningRepository = screeningRepository;
     }
 
     public List<TicketSeatDTO> findAll(){
         return ticketSeatRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
-    }
-
-    public List<TicketSeat> findByIds(List<Long> ids){
-        return ticketSeatRepository.findAllById(ids);
     }
 
     public Optional<TicketSeat> findById(long id){
@@ -49,13 +48,17 @@ public class TicketSeatService {
         return ticketSeatRepository.findAllByOwnerEmail(email).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    public List<TicketSeatDTO> findAllByScreeningId(int id){
+        return ticketSeatRepository.findAllByScreeningId(id).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
     @Transactional
     public TicketSeatDTO create(TicketSeatCreateDTO ticketSeatCreateDTO) throws Exception {
-        MovieGoer movieGoer = movieGoerService.findById(ticketSeatCreateDTO.getOwnerId()) == null ? null :
-                movieGoerService.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(() -> new Exception("User doesnt exist"));
-        Optional<Screening> screening = screeningService.findById(ticketSeatCreateDTO.getScreeningId());
+        MovieGoer movieGoer = ticketSeatCreateDTO.getOwnerId() == null  ? null :
+                movieGoerRepository.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(() -> new Exception("User doesnt exist"));
+        Optional<Screening> screening = screeningRepository.findById(ticketSeatCreateDTO.getScreeningId());
         if(screening.isEmpty())
-            throw new Exception("Screening doesnt exist"); // placeholder
+            throw new IllegalArgumentException("Screening doesnt exist");
         return toDTO(ticketSeatRepository.save(new TicketSeat(ticketSeatCreateDTO.getNumber(), ticketSeatCreateDTO.isTaken(), movieGoer, screening.get())));
     }
 
@@ -63,27 +66,33 @@ public class TicketSeatService {
     public TicketSeatDTO update(long id, TicketSeatCreateDTO ticketSeatCreateDTO) throws Exception {
         Optional<TicketSeat> optionalTicketSeat = ticketSeatRepository.findById(id);
         if(optionalTicketSeat.isEmpty())
-            throw new Exception("TicketSeat doesnt exist"); //placeholder exception
-        Optional<Screening> screening = screeningService.findById(ticketSeatCreateDTO.getScreeningId());
+            throw new NotFoundException();
+        Optional<Screening> screening = screeningRepository.findById(ticketSeatCreateDTO.getScreeningId());
         if(screening.isEmpty())
-            throw new Exception("Screening doesnt exist");
+            throw new IllegalArgumentException("Screening doesnt exist");
         TicketSeat ticketSeat = optionalTicketSeat.get();
         ticketSeat.setNumber(ticketSeatCreateDTO.getNumber());
         ticketSeat.setTaken(ticketSeatCreateDTO.isTaken());
         ticketSeat.setScreening(screening.get());
         ticketSeat.setOwner(ticketSeatCreateDTO.getOwnerId() == null ?
                         null :
-                        movieGoerService.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(() -> new Exception("User doesnt exist")));
+                        movieGoerRepository.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(() -> new Exception("User doesnt exist")));
         return toDTO(ticketSeat);
     }
+    @Transactional
+    public void delete(TicketSeat ticketSeat){ticketSeatRepository.delete(ticketSeat);}
+
+    @Transactional
+    public void deleteById(long id){ticketSeatRepository.deleteById(id);}
+
 
     private TicketSeatDTO toDTO(TicketSeat ticketSeat){
         return new TicketSeatDTO(
                 ticketSeat.getId(),
                 ticketSeat.getNumber(),
                 ticketSeat.isTaken(),
-                ticketSeat.getScreening().getId(),
-                ticketSeat.getOwner()!=null ? ticketSeat.getOwner().getId() : null);
+                ticketSeat.getOwner()!=null ? ticketSeat.getOwner().getId() : null,
+                ticketSeat.getScreening().getId());
     }
 
     private Optional<TicketSeatDTO> toDTO(Optional<TicketSeat> ticketSeat){

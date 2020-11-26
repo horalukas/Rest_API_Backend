@@ -25,6 +25,10 @@ public class Movie {
     private String rating;
 
     @ManyToMany
+    @JoinTable(
+            name = "has_stars",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_star_id"))
     private List<MovieStar> stars;
 
     public Movie() {

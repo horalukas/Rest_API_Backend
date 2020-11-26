@@ -1,6 +1,7 @@
 package cz.cvut.fit.horaluk1.gradle.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MovieDTO {
 
@@ -41,4 +42,22 @@ public class MovieDTO {
     }
 
     public List<Integer> getStarIds() { return starIds; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MovieDTO)) return false;
+        MovieDTO movieDTO = (MovieDTO) o;
+        return id == movieDTO.id &&
+                minutes == movieDTO.minutes &&
+                name.equals(movieDTO.name) &&
+                director.equals(movieDTO.director) &&
+                rating.equals(movieDTO.rating) &&
+                Objects.equals(starIds, movieDTO.starIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, director, minutes, rating, starIds);
+    }
 }

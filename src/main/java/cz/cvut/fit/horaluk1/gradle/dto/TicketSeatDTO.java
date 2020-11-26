@@ -1,5 +1,7 @@
 package cz.cvut.fit.horaluk1.gradle.dto;
 
+import java.util.Objects;
+
 public class TicketSeatDTO {
 
     private final long id;
@@ -34,4 +36,20 @@ public class TicketSeatDTO {
 
     public Integer getScreeningId() { return screeningId; }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TicketSeatDTO)) return false;
+        TicketSeatDTO that = (TicketSeatDTO) o;
+        return id == that.id &&
+                number == that.number &&
+                taken == that.taken &&
+                Objects.equals(ownerId, that.ownerId) &&
+                screeningId.equals(that.screeningId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, taken, ownerId, screeningId);
+    }
 }

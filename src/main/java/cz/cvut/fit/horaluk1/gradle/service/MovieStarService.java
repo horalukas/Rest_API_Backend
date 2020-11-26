@@ -4,6 +4,8 @@ import cz.cvut.fit.horaluk1.gradle.dto.MovieStarCreateDTO;
 import cz.cvut.fit.horaluk1.gradle.dto.MovieStarDTO;
 import cz.cvut.fit.horaluk1.gradle.entity.Movie;
 import cz.cvut.fit.horaluk1.gradle.entity.MovieStar;
+import cz.cvut.fit.horaluk1.gradle.exception.ExistingEntityException;
+import cz.cvut.fit.horaluk1.gradle.exception.NotFoundException;
 import cz.cvut.fit.horaluk1.gradle.repository.MovieStarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,10 @@ import java.util.stream.Collectors;
 public class MovieStarService {
 
     private final MovieStarRepository movieStarRepository;
-    private final MovieService movieService;
 
     @Autowired
-    public MovieStarService(MovieStarRepository movieStarRepository, MovieService movieService) {
+    public MovieStarService(MovieStarRepository movieStarRepository) {
         this.movieStarRepository = movieStarRepository;
-        this.movieService = movieService;
     }
 
     public List<MovieStarDTO> findAll(){
@@ -41,20 +41,19 @@ public class MovieStarService {
         return toDTO(movieStarRepository.findById(id));
     }
 
-    public List<MovieStarDTO> findAllByLastName(String name){
-        return movieStarRepository.findAllByLastName(name).stream().map(this::toDTO).collect(Collectors.toList());
+    public Optional<MovieStarDTO> findAllByFirstNameAndLastName(String firstName, String lastName){
+        return toDTO(movieStarRepository.findAllByFirstNameAndLastName(firstName, lastName));
     }
 
     @Transactional
     public MovieStarDTO create(MovieStarCreateDTO movieStarCreateDTO) throws Exception{
-        List<Movie> movies = movieService.findByIds(movieStarCreateDTO.getMovieIds());
-        if(movies.size() != movieStarCreateDTO.getMovieIds().size())
-            throw new Exception("some movies not found"); // placeholder
+        Optional<MovieStar> optionalMovieStar = movieStarRepository.findAllByFirstNameAndLastName(movieStarCreateDTO.getFirstName(), movieStarCreateDTO.getLastName());
+        if(optionalMovieStar.isPresent())
+            throw new ExistingEntityException();
         return toDTO(
                 movieStarRepository.save(
                         new MovieStar(movieStarCreateDTO.getFirstName(),
-                                movieStarCreateDTO.getSecondName(),
-                                movies)
+                                movieStarCreateDTO.getLastName())
                 )
         );
     }
@@ -63,14 +62,10 @@ public class MovieStarService {
     public MovieStarDTO update(int id, MovieStarCreateDTO movieStarCreateDTO) throws Exception{
         Optional<MovieStar> optionalStar = findById(id);
         if(optionalStar.isEmpty())
-            throw new Exception("Star doesnt exist");//placeholder
+            throw new NotFoundException();
         MovieStar star = optionalStar.get();
-        List<Movie> movies = movieService.findByIds(movieStarCreateDTO.getMovieIds());
-        if(movies.size() != movieStarCreateDTO.getMovieIds().size())
-            throw new Exception("some movies not found"); // placeholder
         star.setFirstName(movieStarCreateDTO.getFirstName());
-        star.setLastName(movieStarCreateDTO.getSecondName());
-        star.setMovies(movies);
+        star.setLastName(movieStarCreateDTO.getLastName());
         return toDTO(star);
     }
 
@@ -78,8 +73,7 @@ public class MovieStarService {
         return new MovieStarDTO(
                 movieStar.getId(),
                 movieStar.getFirstName(),
-                movieStar.getLastName(),
-                movieStar.getMovies().stream().map(Movie::getId).collect(Collectors.toList()));
+                movieStar.getLastName());
     }
 
     private Optional<MovieStarDTO> toDTO(Optional<MovieStar> movieStar){
@@ -87,4 +81,5 @@ public class MovieStarService {
             return Optional.empty();
         return Optional.of(toDTO(movieStar.get()));
     }
+
 }
