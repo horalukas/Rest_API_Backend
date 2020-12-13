@@ -8,6 +8,7 @@ import cz.cvut.fit.horaluk1.gradle.repository.MovieGoerRepository;
 import cz.cvut.fit.horaluk1.gradle.repository.ScreeningRepository;
 import cz.cvut.fit.horaluk1.gradle.repository.TicketSeatRepository;
 import cz.cvut.fit.horaluk1.gradle.service.TicketSeatService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
@@ -95,6 +96,31 @@ public class TicketSeatServiceTest {
         BDDMockito.given(ticketSeatRepositoryMock.findAllByOwnerEmail(movieGoer.getEmail())).willReturn(ticketSeats);
         assertArrayEquals(ticketseatsdto.toArray(), ticketSeatService.findAllByOwnerEmail(movieGoer.getEmail()).toArray());
         Mockito.verify(ticketSeatRepositoryMock, Mockito.atLeastOnce()).findAllByOwnerEmail(movieGoer.getEmail());
+    }
+
+    @Test
+    void findAllByScreeningId(){
+        Auditorium auditorium = new Auditorium(200);
+        Movie movie = new Movie("Inception", "Christopher Nolan", 150, "PG-13", new ArrayList<>());
+        Screening screening = new Screening(new Date(), true, auditorium, movie);
+        MovieGoer movieGoer = new MovieGoer("blabla@bla.com", "123");
+        TicketSeatDTO ticketSeatDTO1 = new TicketSeatDTO(0, 1, false, 0, 0);
+        TicketSeatDTO ticketSeatDTO2 = new TicketSeatDTO(0, 2, false, 0, 0);
+        TicketSeatDTO ticketSeatDTO3 = new TicketSeatDTO(0, 3, false, 0, 0);
+        List<TicketSeatDTO> ticketseatsdto = new ArrayList<>();
+        ticketseatsdto.add(ticketSeatDTO1);
+        ticketseatsdto.add(ticketSeatDTO2);
+        ticketseatsdto.add(ticketSeatDTO3);
+        TicketSeat ticketSeat1 = new TicketSeat(1,false, movieGoer, screening);
+        TicketSeat ticketSeat2 = new TicketSeat(2,false, movieGoer, screening);
+        TicketSeat ticketSeat3 = new TicketSeat(3,false, movieGoer, screening);
+        List<TicketSeat> ticketSeats = new ArrayList<>();
+        ticketSeats.add(ticketSeat1);
+        ticketSeats.add(ticketSeat2);
+        ticketSeats.add(ticketSeat3);
+        BDDMockito.given(ticketSeatRepositoryMock.findAllByScreeningId(screening.getId())).willReturn(ticketSeats);
+        assertArrayEquals(ticketseatsdto.toArray(), ticketSeatService.findAllByScreeningId(screening.getId()).toArray());
+        Mockito.verify(ticketSeatRepositoryMock, Mockito.atLeastOnce()).findAllByScreeningId(screening.getId());
     }
 
     @Test

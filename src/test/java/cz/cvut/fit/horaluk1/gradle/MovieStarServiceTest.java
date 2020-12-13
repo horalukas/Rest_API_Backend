@@ -59,7 +59,7 @@ public class MovieStarServiceTest {
         movieStarList.add(movieStar2);
         List<Integer> ids = new ArrayList<>();
         BDDMockito.given(movieStarRepositoryMock.findAllById(ids)).willReturn(movieStarList);
-        assertArrayEquals(movieStarList.toArray(), movieStarService.findByIds(ids).toArray());
+        assertArrayEquals(movieStarDTOList.toArray(), movieStarService.findByIds(ids).toArray());
     }
 
     @Test

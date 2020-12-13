@@ -53,9 +53,9 @@ public class TicketSeatService {
     }
 
     @Transactional
-    public TicketSeatDTO create(TicketSeatCreateDTO ticketSeatCreateDTO) throws Exception {
+    public TicketSeatDTO create(TicketSeatCreateDTO ticketSeatCreateDTO) throws IllegalArgumentException {
         MovieGoer movieGoer = ticketSeatCreateDTO.getOwnerId() == null  ? null :
-                movieGoerRepository.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(() -> new Exception("User doesnt exist"));
+                movieGoerRepository.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(IllegalArgumentException::new);
         Optional<Screening> screening = screeningRepository.findById(ticketSeatCreateDTO.getScreeningId());
         if(screening.isEmpty())
             throw new IllegalArgumentException("Screening doesnt exist");
@@ -63,7 +63,7 @@ public class TicketSeatService {
     }
 
     @Transactional
-    public TicketSeatDTO update(long id, TicketSeatCreateDTO ticketSeatCreateDTO) throws Exception {
+    public TicketSeatDTO update(long id, TicketSeatCreateDTO ticketSeatCreateDTO) throws IllegalArgumentException {
         Optional<TicketSeat> optionalTicketSeat = ticketSeatRepository.findById(id);
         if(optionalTicketSeat.isEmpty())
             throw new NotFoundException();
@@ -76,7 +76,7 @@ public class TicketSeatService {
         ticketSeat.setScreening(screening.get());
         ticketSeat.setOwner(ticketSeatCreateDTO.getOwnerId() == null ?
                         null :
-                        movieGoerRepository.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(() -> new Exception("User doesnt exist")));
+                        movieGoerRepository.findById(ticketSeatCreateDTO.getOwnerId()).orElseThrow(IllegalArgumentException::new));
         return toDTO(ticketSeat);
     }
     @Transactional

@@ -10,6 +10,7 @@ import cz.cvut.fit.horaluk1.gradle.repository.AuditoriumRepository;
 import cz.cvut.fit.horaluk1.gradle.repository.MovieRepository;
 import cz.cvut.fit.horaluk1.gradle.repository.ScreeningRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,7 @@ public class ScreeningService {
     }
 
     @Transactional
-    public ScreeningDTO create(ScreeningCreateDTO screeningCreateDTO) throws Exception {
+    public ScreeningDTO create(ScreeningCreateDTO screeningCreateDTO) throws IllegalArgumentException {
         Optional<Auditorium> auditorium = auditoriumRepository.findById(screeningCreateDTO.getAuditoriumId());
         if(auditorium.isEmpty())
             throw new IllegalArgumentException();
@@ -61,7 +62,7 @@ public class ScreeningService {
     }
 
     @Transactional
-    public ScreeningDTO update(int id, ScreeningCreateDTO screeningCreateDTO) throws Exception {
+    public ScreeningDTO update(int id, ScreeningCreateDTO screeningCreateDTO) throws IllegalArgumentException {
         Optional<Screening> optionalScreening = screeningRepository.findById(id);
         if(optionalScreening.isEmpty())
             throw new NotFoundException();
@@ -85,7 +86,8 @@ public class ScreeningService {
     @Transactional
     public void deleteById(int id){screeningRepository.deleteById(id);}
 
-   /* @Transactional
+    /*@Transactional
+    @Scheduled()
     public void deleteAuto(){
         List<ScreeningDTO> screeningDTOS = findAll();
         for(ScreeningDTO dto : screeningDTOS){

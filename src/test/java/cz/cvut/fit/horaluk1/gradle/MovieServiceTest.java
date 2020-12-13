@@ -157,7 +157,6 @@ public class MovieServiceTest {
         MovieCreateDTO movieCreateDTO = new MovieCreateDTO("bla", "123", 100, "PG-13", stars);
         BDDMockito.given(movieRepositoryMock.save(any(Movie.class))).willReturn(movie);
         BDDMockito.given(movieRepositoryMock.findById(movie.getId())).willReturn(Optional.of(movie));
-        movieService.create(movieCreateDTO);
         MovieDTO expectedDTO = new MovieDTO(1, "bla", "123", 100, "PG-13", stars);
         MovieCreateDTO movieCreateDTO1 = new MovieCreateDTO("bla", "123", 100, "PG-13", stars);
         MovieDTO returnedDTO = movieService.update(1, movieCreateDTO1);

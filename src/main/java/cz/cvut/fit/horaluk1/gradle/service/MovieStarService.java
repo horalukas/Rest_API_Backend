@@ -29,8 +29,8 @@ public class MovieStarService {
         return movieStarRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<MovieStar> findByIds(List<Integer> ids){
-        return movieStarRepository.findAllById(ids);
+    public List<MovieStarDTO> findByIds(List<Integer> ids){
+        return movieStarRepository.findAllById(ids).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public Optional<MovieStar> findById(int id){
@@ -46,7 +46,7 @@ public class MovieStarService {
     }
 
     @Transactional
-    public MovieStarDTO create(MovieStarCreateDTO movieStarCreateDTO) throws Exception{
+    public MovieStarDTO create(MovieStarCreateDTO movieStarCreateDTO) throws ExistingEntityException{
         Optional<MovieStar> optionalMovieStar = movieStarRepository.findAllByFirstNameAndLastName(movieStarCreateDTO.getFirstName(), movieStarCreateDTO.getLastName());
         if(optionalMovieStar.isPresent())
             throw new ExistingEntityException();
@@ -59,7 +59,7 @@ public class MovieStarService {
     }
 
     @Transactional
-    public MovieStarDTO update(int id, MovieStarCreateDTO movieStarCreateDTO) throws Exception{
+    public MovieStarDTO update(int id, MovieStarCreateDTO movieStarCreateDTO) throws NotFoundException{
         Optional<MovieStar> optionalStar = findById(id);
         if(optionalStar.isEmpty())
             throw new NotFoundException();

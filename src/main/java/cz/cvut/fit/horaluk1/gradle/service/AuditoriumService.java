@@ -40,7 +40,7 @@ public class AuditoriumService {
     }
 
     @Transactional
-    public AuditoriumDTO update(int id, AuditoriumCreateDTO auditoriumCreateDTO) throws Exception{
+    public AuditoriumDTO update(int id, AuditoriumCreateDTO auditoriumCreateDTO) throws NotFoundException{
         Optional<Auditorium> optionalAuditorium = auditoriumRepository.findById(id);
         if(optionalAuditorium.isEmpty())
             throw new NotFoundException();

@@ -40,7 +40,7 @@ public class MovieGoerService {
         return toDTO(movieGoerRepository.findByEmail(email));
     }
 
-    public MovieGoerDTO create(MovieGoerCreateDTO movieGoerCreateDTO){
+    public MovieGoerDTO create(MovieGoerCreateDTO movieGoerCreateDTO)throws ExistingEntityException{
         Optional<MovieGoer> optionalMovieGoer = movieGoerRepository.findByEmail(movieGoerCreateDTO.getEmail());
         if(!optionalMovieGoer.isEmpty())
             throw new ExistingEntityException();
@@ -48,7 +48,7 @@ public class MovieGoerService {
     }
 
     @Transactional
-    public MovieGoerDTO update(int id, MovieGoerCreateDTO movieGoerCreateDTO)throws Exception{
+    public MovieGoerDTO update(int id, MovieGoerCreateDTO movieGoerCreateDTO)throws NotFoundException{
         Optional<MovieGoer> optionalMovieGoer = movieGoerRepository.findById(id);
         if(optionalMovieGoer.isEmpty())
             throw new NotFoundException();

@@ -53,7 +53,7 @@ public class MovieService {
     }
 
     @Transactional
-    public MovieDTO create(MovieCreateDTO movieCreateDTO) throws Exception{
+    public MovieDTO create(MovieCreateDTO movieCreateDTO) throws IllegalArgumentException{
         Optional<Movie> optionalMovie = movieRepository.findByName(movieCreateDTO.getName());
         if(!optionalMovie.isEmpty())
             throw new ExistingEntityException();
@@ -72,7 +72,7 @@ public class MovieService {
     }
 
     @Transactional
-    public MovieDTO update(int id, MovieCreateDTO movieCreateDTO) throws Exception{
+    public MovieDTO update(int id, MovieCreateDTO movieCreateDTO) throws IllegalArgumentException{
         Optional<Movie> optionalMovie = findById(id);
         if(optionalMovie.isEmpty())
             throw new NotFoundException();
