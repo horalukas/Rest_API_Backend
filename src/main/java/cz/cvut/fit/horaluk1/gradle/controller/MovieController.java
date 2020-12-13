@@ -24,31 +24,37 @@ public class MovieController {
     }
 
     @GetMapping("/movie/all")
+    @ResponseStatus(HttpStatus.OK)
     List<MovieDTO> all(){
         return movieService.findAll();
     }
 
     @GetMapping("/movie/{id}")
+    @ResponseStatus(HttpStatus.OK)
     MovieDTO byId(@PathVariable int id) {
         return movieService.findByIdAsDTO(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/movie", params = {"name"})
+    @ResponseStatus(HttpStatus.OK)
     MovieDTO byName(@RequestParam String name){
         return movieService.findByName(name).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/movie", params = {"director"})
+    @ResponseStatus(HttpStatus.OK)
     List<MovieDTO> allByDirector(@RequestParam String director) {
         return movieService.findAllByDirector(director);
     }
 
     @GetMapping(value = "/movie", params = {"rating"})
+    @ResponseStatus(HttpStatus.OK)
     List<MovieDTO> allByRating(@RequestParam String rating) {
         return movieService.findAllByRating(rating);
     }
 
     @PostMapping("/movie")
+    @ResponseStatus(HttpStatus.CREATED)
     MovieDTO save(@RequestBody MovieCreateDTO movie){
         try {
             return movieService.create(movie);
@@ -58,6 +64,7 @@ public class MovieController {
     }
 
     @PutMapping("/movie/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     MovieDTO save(@PathVariable int id, @RequestBody MovieCreateDTO movieCreateDTO){
         try {
             return movieService.update(id, movieCreateDTO);

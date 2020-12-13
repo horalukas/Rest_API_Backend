@@ -21,21 +21,25 @@ public class ScreeningController {
     }
 
     @GetMapping("/screening")
+    @ResponseStatus(HttpStatus.OK)
     List<ScreeningDTO> all(){
         return  screeningService.findAll();
     }
 
     @GetMapping("/screening/{id}")
+    @ResponseStatus(HttpStatus.OK)
     ScreeningDTO byId(@PathVariable int id){
         return screeningService.findByIdAsDTO(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/screening", params = {"name"})
+    @ResponseStatus(HttpStatus.OK)
     List<ScreeningDTO> byMovieName(@RequestParam String name){
         return screeningService.findAllByMovieName(name);
     }
 
     @PostMapping("/screening")
+    @ResponseStatus(HttpStatus.CREATED)
     ScreeningDTO save(@RequestBody ScreeningCreateDTO screeningCreateDTO){
         try {
             return screeningService.create(screeningCreateDTO);
@@ -45,6 +49,7 @@ public class ScreeningController {
     }
 
     @PutMapping("/screening/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     ScreeningDTO save(@PathVariable int id, @RequestBody ScreeningCreateDTO screeningCreateDTO){
         try {
             return screeningService.update(id, screeningCreateDTO);
@@ -56,6 +61,7 @@ public class ScreeningController {
     }
 
     @DeleteMapping("/screening/{id}")
+    @ResponseStatus(HttpStatus.OK)
     void deleteById(@PathVariable int id){
         screeningService.deleteById(id);
     }

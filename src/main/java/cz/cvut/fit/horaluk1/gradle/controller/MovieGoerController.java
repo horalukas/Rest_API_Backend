@@ -23,30 +23,35 @@ public class MovieGoerController {
     }
 
     @GetMapping("/moviegoer/all")
+    @ResponseStatus(HttpStatus.OK)
     List<MovieGoerDTO> all(){
         return movieGoerService.findAll();
     }
 
     @GetMapping("/moviegoer/{id}")
+    @ResponseStatus(HttpStatus.OK)
     MovieGoerDTO byId(@PathVariable int id) {
         return movieGoerService.findByIdAsDTO(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/moviegoer", params = {"email"})
+    @ResponseStatus(HttpStatus.OK)
     MovieGoerDTO byEmail(@RequestParam String email){
         return movieGoerService.findByEmail(email).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/moviegoer")
+    @ResponseStatus(HttpStatus.CREATED)
     MovieGoerDTO save(@RequestBody MovieGoerCreateDTO movieGoer){
         try {
             return movieGoerService.create(movieGoer);
         }catch(ExistingEntityException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
     @PutMapping("/moviegoer/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     MovieGoerDTO save(@PathVariable int id, @RequestBody MovieGoerCreateDTO movieGoerCreateDTO){
         try {
             return movieGoerService.update(id, movieGoerCreateDTO);
@@ -56,11 +61,13 @@ public class MovieGoerController {
     }
 
     @DeleteMapping("/moviegoer/{id}")
+    @ResponseStatus(HttpStatus.OK)
     void deleteById(@PathVariable int id){
         movieGoerService.deleteById(id);
     }
 
     @DeleteMapping(value = "/moviegoer", params = {"email"})
+    @ResponseStatus(HttpStatus.OK)
     void deleteByEmail(@RequestParam String email){
         movieGoerService.deleteByEmail(email);
     }

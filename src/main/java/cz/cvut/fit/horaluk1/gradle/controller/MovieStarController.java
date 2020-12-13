@@ -21,26 +21,31 @@ public class MovieStarController {
     }
 
     @GetMapping("/moviestar/all")
+    @ResponseStatus(HttpStatus.OK)
     List<MovieStarDTO> all(){
         return movieStarService.findAll();
     }
 
     @GetMapping("/moviestar/{id}")
+    @ResponseStatus(HttpStatus.OK)
     MovieStarDTO byId(@PathVariable int id) {
         return movieStarService.findByIdAsDTO(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/moviestar/ids")
+    @ResponseStatus(HttpStatus.OK)
     List<MovieStarDTO> allById(@RequestParam List<Integer> ids){
         return movieStarService.findByIds(ids);
     }
 
     @GetMapping("/moviestar/{first}/{last}")
+    @ResponseStatus(HttpStatus.OK)
    MovieStarDTO allByName(@RequestParam String first, @RequestParam String last) {
         return movieStarService.findAllByFirstNameAndLastName(first, last).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/moviestar")
+    @ResponseStatus(HttpStatus.CREATED)
     MovieStarDTO save(@RequestBody MovieStarCreateDTO movieStar){
         try {
             return movieStarService.create(movieStar);
@@ -50,6 +55,7 @@ public class MovieStarController {
     }
 
     @PutMapping("/moviestar/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     MovieStarDTO save(@PathVariable int id, @RequestBody MovieStarCreateDTO movieStarCreateDTO){
         try {
             return movieStarService.update(id, movieStarCreateDTO);
