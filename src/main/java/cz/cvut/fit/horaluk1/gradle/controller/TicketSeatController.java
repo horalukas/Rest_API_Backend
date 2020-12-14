@@ -22,31 +22,31 @@ public class TicketSeatController {
 
     @GetMapping("/ticketseat")
     @ResponseStatus(HttpStatus.OK)
-    List<TicketSeatDTO> all(){
+    public List<TicketSeatDTO> all(){
         return  ticketSeatService.findAll();
     }
 
     @GetMapping("/ticketseat/{id}")
     @ResponseStatus(HttpStatus.OK)
-    TicketSeatDTO byId(@PathVariable long id){
+    public TicketSeatDTO byId(@PathVariable long id){
         return ticketSeatService.findByIdAsDTO(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/ticketseat", params = {"email"})
     @ResponseStatus(HttpStatus.OK)
-    List<TicketSeatDTO> byOwnerEmail(@RequestParam String email){
+    public List<TicketSeatDTO> byOwnerEmail(@RequestParam String email){
         return ticketSeatService.findAllByOwnerEmail(email);
     }
 
     @GetMapping(value = "/ticketseat", params = {"id"})
     @ResponseStatus(HttpStatus.OK)
-    List<TicketSeatDTO> byScreeningId(@RequestParam int id){
+    public List<TicketSeatDTO> byScreeningId(@RequestParam int id){
         return ticketSeatService.findAllByScreeningId(id);
     }
 
     @PostMapping("/ticketseat")
     @ResponseStatus(HttpStatus.CREATED)
-    TicketSeatDTO save(@RequestBody TicketSeatCreateDTO ticketSeatCreateDTO){
+    public TicketSeatDTO save(@RequestBody TicketSeatCreateDTO ticketSeatCreateDTO){
         try {
             return ticketSeatService.create(ticketSeatCreateDTO);
         }catch(IllegalArgumentException e){
@@ -56,7 +56,7 @@ public class TicketSeatController {
 
     @PutMapping("/ticketseat/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    TicketSeatDTO save(@PathVariable long id, @RequestBody TicketSeatCreateDTO ticketSeatCreateDTO){
+    public TicketSeatDTO update(@PathVariable long id, @RequestBody TicketSeatCreateDTO ticketSeatCreateDTO){
         try {
             return ticketSeatService.update(id, ticketSeatCreateDTO);
         }catch(NotFoundException e){
@@ -68,7 +68,7 @@ public class TicketSeatController {
 
     @DeleteMapping("/ticketseat/{id}")
     @ResponseStatus(HttpStatus.OK)
-    void deleteById(@PathVariable long id){
+    public void deleteById(@PathVariable long id){
         ticketSeatService.deleteById(id);
     }
 }

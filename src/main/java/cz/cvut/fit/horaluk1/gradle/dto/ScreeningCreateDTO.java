@@ -1,10 +1,13 @@
 package cz.cvut.fit.horaluk1.gradle.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class ScreeningCreateDTO {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-hh-mm")
     private Date time;
     private boolean _3D;
     private Integer auditoriumId;

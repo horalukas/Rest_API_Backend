@@ -23,25 +23,25 @@ public class AuditoriumController {
 
     @GetMapping("/auditorium/all")
     @ResponseStatus(HttpStatus.OK)
-    List<AuditoriumDTO> all(){
+    public List<AuditoriumDTO> all(){
         return auditoriumService.findAll();
     }
 
     @GetMapping("/auditorium/{id}")
     @ResponseStatus(HttpStatus.OK)
-    AuditoriumDTO byId(@PathVariable int id){
+    public AuditoriumDTO byId(@PathVariable int id){
         return auditoriumService.findByIdAsDTO(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/auditorium")
     @ResponseStatus(HttpStatus.CREATED)
-    AuditoriumDTO save(@RequestBody AuditoriumCreateDTO auditorium){
+    public AuditoriumDTO save(@RequestBody AuditoriumCreateDTO auditorium){
         return auditoriumService.create(auditorium);
     }
 
     @PutMapping("/auditorium/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    AuditoriumDTO save(@PathVariable int id, @RequestBody AuditoriumCreateDTO auditorium) {
+    public AuditoriumDTO update(@PathVariable int id, @RequestBody AuditoriumCreateDTO auditorium) {
         try {
             return auditoriumService.update(id, auditorium);
         } catch (NotFoundException e) {
