@@ -1,0 +1,108 @@
+POST http://localhost:8080/moviestar
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"firstName": "Leonardo", "lastName": "Dicaprio"}
+
+###
+
+POST http://localhost:8080/moviestar
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"firstName": "Tom", "lastName": "Hardy"}
+
+###
+
+POST http://localhost:8080/moviestar
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"firstName": "Ellen", "lastName": "Page"}
+
+###
+
+POST http://localhost:8080/movie
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"name": "Inception", "director": "Christopher Nolan", "minutes": 120, "rating": "PG-13", "starIds": [1, 2, 3]}
+
+###
+
+POST http://localhost:8080/auditorium
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"capacity": 200}
+
+###
+
+POST http://localhost:8080/auditorium
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"capacity": 200}
+
+###
+
+POST http://localhost:8080/auditorium
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"capacity": 200}
+
+###
+
+POST http://localhost:8080/auditorium
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"capacity": 200}
+
+###
+
+POST http://localhost:8080/screening
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"time": "2020-12-14-12-00", "_3D": false, "auditoriumId":  1, "movieId" : 1}
+
+###
+
+POST http://localhost:8080/moviegoer
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"email": "admin", "password":"admin"}
+
+###
+
+POST http://localhost:8080/moviegoer
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"email": "user", "password":"password"}
+
+###
+
+
+PUT http://localhost:8080/ticketseat/15
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"number": 15, "taken": true, "ownerId":  1, "screeningId":  1}
+
+###

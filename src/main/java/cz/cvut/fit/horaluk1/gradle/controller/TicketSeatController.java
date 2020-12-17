@@ -20,7 +20,7 @@ public class TicketSeatController {
         this.ticketSeatService = ticketSeatService;
     }
 
-    @GetMapping("/ticketseat")
+    @GetMapping("/ticketseat/all")
     @ResponseStatus(HttpStatus.OK)
     public List<TicketSeatDTO> all(){
         return  ticketSeatService.findAll();

@@ -32,13 +32,13 @@ public class MovieStarController {
         return movieStarService.findByIdAsDTO(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/moviestar/ids")
+    @GetMapping(value = "/moviestar/ids", params = {"ids"})
     @ResponseStatus(HttpStatus.OK)
     public List<MovieStarDTO> allById(@RequestParam List<Integer> ids){
         return movieStarService.findByIds(ids);
     }
 
-    @GetMapping("/moviestar/{first}/{last}")
+    @GetMapping(value = "/moviestar", params = {"first", "last"})
     @ResponseStatus(HttpStatus.OK)
     public MovieStarDTO allByName(@RequestParam String first, @RequestParam String last) {
         return movieStarService.findAllByFirstNameAndLastName(first, last).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));

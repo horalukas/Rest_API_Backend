@@ -1,9 +1,7 @@
 package cz.cvut.fit.horaluk1.gradle.controller;
 
-import cz.cvut.fit.horaluk1.gradle.dto.AuditoriumCreateDTO;
-import cz.cvut.fit.horaluk1.gradle.dto.ScreeningCreateDTO;
-import cz.cvut.fit.horaluk1.gradle.dto.ScreeningDTO;
-import cz.cvut.fit.horaluk1.gradle.dto.TicketSeatCreateDTO;
+import cz.cvut.fit.horaluk1.gradle.dto.*;
+import cz.cvut.fit.horaluk1.gradle.entity.TicketSeat;
 import cz.cvut.fit.horaluk1.gradle.exception.NotFoundException;
 import cz.cvut.fit.horaluk1.gradle.service.AuditoriumService;
 import cz.cvut.fit.horaluk1.gradle.service.ScreeningService;
@@ -13,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,7 +27,7 @@ public class ScreeningController {
         this.ticketSeatService = ticketSeatService;
     }
 
-    @GetMapping("/screening")
+    @GetMapping("/screening/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ScreeningDTO> all(){
         return  screeningService.findAll();
@@ -77,6 +76,10 @@ public class ScreeningController {
     @DeleteMapping("/screening/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteById(@PathVariable int id){
+        List<TicketSeatDTO> seatDTOS = ticketSeatService.findAllByScreeningId(id);
+        for (TicketSeatDTO seat:seatDTOS){
+            ticketSeatService.deleteById(seat.getId());
+        }
         screeningService.deleteById(id);
     }
 }
